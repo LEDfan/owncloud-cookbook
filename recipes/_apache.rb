@@ -21,7 +21,10 @@
 #
 
 include_recipe 'apache2::default'
-include_recipe 'apache2::mod_php5'
+include_recipe 'apache2::mod_proxy'
+include_recipe 'apache2::mod_proxy_fcgi'
+include_recipe 'owncloud::_php_fpm'
+#include_recipe 'apache2::mod_php5'
 
 # Disable default site
 apache_site 'default' do

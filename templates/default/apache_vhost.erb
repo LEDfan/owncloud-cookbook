@@ -10,6 +10,7 @@
 <% end -%>
   DocumentRoot <%= @params[:docroot] %>
 
+  SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
   <Directory <%= @params[:docroot] %>>
     Options Indexes FollowSymLinks MultiViews
     AllowOverride All
@@ -21,6 +22,11 @@
 <% end -%>
   </Directory>
 
+  <FilesMatch \.php$>
+    SetHandler "proxy:unix:/var/run/php-fpm-owncloud.sock|fcgi://localhost"
+  </FilesMatch>
+  DirectoryIndex index.php
+
   LogLevel info
   ErrorLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-error.log
   CustomLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-access.log combined
@@ -29,13 +35,6 @@
   <%= render 'apache.erb', cookbook: 'ssl_certificate', variables: @params.merge(node: node) %>
 <% end -%>
 
-<% if @params[:max_upload_size] -%>
-  <IfModule mod_php5.c>
-    php_admin_value upload_max_filesize "<%= @params[:max_upload_size] %>"
-    php_admin_value post_max_size "<%= @params[:max_upload_size] %>"
-  </IfModule>
-
-<% end -%>
   EnableSendfile <%= @params[:sendfile].eql?(true) ? 'On' : 'Off' %>
 
   # Patch to avoid file corruption. See:

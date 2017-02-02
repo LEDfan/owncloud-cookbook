@@ -56,8 +56,12 @@ depends 'php-fpm', '~> 0.7'
 depends 'postfix', '~> 3.0'
 depends 'postgresql', '~> 3.4.18'
 depends 'ssl_certificate', '~> 1.1'
+depends 'poise-service', '~> 1.4.2'
 
 recipe 'owncloud::default', 'Installs and configures ownCloud'
+kbook 'poise-service', '~> 1.4.2'
+
+
 
 attribute 'owncloud/version',
           display_name: 'ownCloud Version',

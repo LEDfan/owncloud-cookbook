@@ -24,7 +24,40 @@
 # Installs PHP-FPM
 #==============================================================================
 
-include_recipe 'php-fpm'
+directory '/var/lib/php/session' do
+  owner 'apache'
+  group 'apache'
+  mode '0750'
+  action :create
+  recursive true
+end
+
+directory '/var/log/php-fpm' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
+
+directory '/var/run/php-fpm' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
+
+poise_service 'php-fpm' do
+  command '/usr/local/sbin/php-fpm --nodaemonize --fpm-config /etc/php-fpm.conf'
+  stop_signal 'WINCH'
+  reload_signal 'USR2'
+end
+
+service "php-fpm" do
+  supports :start => true, :stop => true, :restart => true, :reload => true
+  action [ :enable, :start ]
+end
+
+include_recipe 'php-fpm::configure'
 
 web_server = node['owncloud']['web_server']
 

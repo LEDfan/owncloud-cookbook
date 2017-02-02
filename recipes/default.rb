@@ -75,34 +75,45 @@ end
 
 # ownCloud requires PHP >= 5.4.0, so in older ubuntu versions we need to add an
 # extra repository in order to provide it
-apt_repository 'ondrej-php5-oldstable' do
-  uri 'http://ppa.launchpad.net/ondrej/php5-oldstable/ubuntu'
-  distribution node['lsb']['codename'] if node['lsb'].is_a?(Hash)
-  components %w(main)
-  keyserver 'keyserver.ubuntu.com'
-  key 'E5267A6C'
-  deb_src true
-  only_if do
-    node['platform'] == 'ubuntu' &&
-      Chef::VersionConstraint.new('<= 12.04').include?(node['platform_version'])
-  end
-end
+#apt_repository 'ondrej-php5-oldstable' do
+#  uri 'http://ppa.launchpad.net/ondrej/php5-oldstable/ubuntu'
+#  distribution node['lsb']['codename'] if node['lsb'].is_a?(Hash)
+#  components %w(main)
+#  keyserver 'keyserver.ubuntu.com'
+#  key 'E5267A6C'
+#  deb_src true
+#  only_if do
+#    node['platform'] == 'ubuntu' &&
+#      Chef::VersionConstraint.new('<= 12.04').include?(node['platform_version'])
+#  end
+#end
 
-include_recipe 'php'
 
-node['owncloud']['packages']['core'].each do |pkg|
-  package pkg do
-    action :install
-  end
-end
+node.default['php']['curl']['package']   = ''
+node.default['php']['apc']['package']    = ''
+node.default['php']['apcu']['package']   = ''
+node.default['php']['gd']['package']     = ''
+node.default['php']['ldap']['package']   = ''
+node.default['php']['pgsql']['package']  = ''
+node.default['php']['sqlite']['package'] = ''
+node.default['php']['version'] = '7.1.0'
+node.default['php']['checksum'] = '9e84c5b13005c56374730edf534fe216f6a2e63792a9703d4b894e770bbccbae'
 
-if node['owncloud']['packages'].key?(dbtype)
-  node['owncloud']['packages'][dbtype].each do |pkg|
-    package pkg do
-      action :install
-    end
-  end
-end
+include_recipe 'php::source'
+
+#node['owncloud']['packages']['core'].each do |pkg|
+#  package pkg do
+#    action :install
+#  end
+#end
+#
+#if node['owncloud']['packages'].key?(dbtype)
+#  node['owncloud']['packages'][dbtype].each do |pkg|
+#    package pkg do
+#      action :install
+##    end
+#  end
+#end
 
 #==============================================================================
 # Set up database
