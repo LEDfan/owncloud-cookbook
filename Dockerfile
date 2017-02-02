@@ -6,5 +6,4 @@ RUN chef-client -r "recipe[owncloud]"
 
 EXPOSE 80
 
-CMD [""]
 CMD ["apache2", "-D", "FOREGROUND"]

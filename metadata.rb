@@ -43,13 +43,13 @@ supports 'scientific'
 supports 'ubuntu'
 
 depends 'apache2', '~> 3.0'
-depends 'apt', '~> 2.0'
+depends 'apt', '~> 2.9'
 depends 'cron', '~> 1.6'
 depends 'database', '~> 4.0'
 depends 'encrypted_attributes', '~> 0.2'
-depends 'mysql2_chef_gem', '~> 1.0.1'
-depends 'mysql', '~> 6.0'
-depends 'nginx', '~> 2.7'
+depends 'mysql2_chef_gem', '~> 1.1.0'
+depends 'mysql', '>= 6.0'
+depends 'nginx'
 depends 'openssl', '~> 4.0'
 depends 'php', '~> 1.4'
 depends 'php-fpm', '~> 0.7'
@@ -59,9 +59,6 @@ depends 'ssl_certificate', '~> 1.1'
 depends 'poise-service', '~> 1.4.2'
 
 recipe 'owncloud::default', 'Installs and configures ownCloud'
-kbook 'poise-service', '~> 1.4.2'
-
-
 
 attribute 'owncloud/version',
           display_name: 'ownCloud Version',
