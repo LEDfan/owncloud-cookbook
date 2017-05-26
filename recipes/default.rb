@@ -153,13 +153,21 @@ when 'mysql'
     end
 
     mysql_service dbinstance do
-      data_dir node['owncloud']['mysql']['data_dir']
+	  if !node['owncloud']['mysql']['data_dir'].nil?
+		  data_dir node['owncloud']['mysql']['data_dir']
+	  end
       initial_root_password root_password
       bind_address node['owncloud']['config']['dbhost']
       port node['owncloud']['config']['dbport'].to_s
-      run_group node['owncloud']['mysql']['run_group']
-      run_user node['owncloud']['mysql']['run_user']
-      version node['owncloud']['mysql']['version']
+	  if !node['owncloud']['mysql']['run_group'].nil?
+		  run_group node['owncloud']['mysql']['run_group']
+	  end
+	  if !node['owncloud']['mysql']['run_user'].nil?
+		  run_user node['owncloud']['mysql']['run_user']
+	  end
+	  if !node['owncloud']['mysql']['version'].nil?
+		  version node['owncloud']['mysql']['version']
+	  end
       action [:create, :start]
     end
 
