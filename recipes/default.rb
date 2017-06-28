@@ -99,7 +99,21 @@ node.default['php']['sqlite']['package'] = ''
 node.default['php']['version'] = '7.1.0'
 node.default['php']['checksum'] = '9e84c5b13005c56374730edf534fe216f6a2e63792a9703d4b894e770bbccbae'
 
-include_recipe 'php::source'
+# yum_repository 'mysql55' do
+# 	baseurl 'https://repo.mysql.com/yum/mysql-5.5-community/el/7/x86_64/'
+# 	description ''
+# 	enabled true
+# 	gpgcheck true
+#   repositoryid 'mysql55'
+# end
+# yum_repository 'mysql55-community' do
+#   mirrorlist 'https://repo.mysql.com/yum/mysql-5.5-community/el/$releasever/$basearch/'
+#   description ''
+#   enabled true
+#   gpgcheck true
+# end
+# include_recipe 'mysql55'
+
 
 #node['owncloud']['packages']['core'].each do |pkg|
 #  package pkg do
@@ -148,6 +162,7 @@ when 'mysql'
 
     dbinstance = node['owncloud']['mysql']['instance']
 
+	include_recipe 'yum-mysql-community::mysql57'
     mysql2_chef_gem dbinstance do
       action :install
     end
@@ -252,6 +267,8 @@ when 'pgsql'
 else
   fail "Unsupported database type: #{node['owncloud']['config']['dbtype']}"
 end
+
+include_recipe 'php::source'
 
 #==============================================================================
 # Set up mail transfer agent
