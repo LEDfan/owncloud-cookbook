@@ -23,7 +23,6 @@
 include_recipe 'apache2::default'
 include_recipe 'apache2::mod_proxy'
 include_recipe 'apache2::mod_proxy_fcgi'
-# include_recipe 'owncloud::_php_fpm' # TODO
 apache_module "libphp7" do
   filename "libphp7.so"
   identifier "php7_module"

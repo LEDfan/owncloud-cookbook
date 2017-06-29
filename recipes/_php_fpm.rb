@@ -24,34 +24,7 @@
 # Installs PHP-FPM
 #==============================================================================
 
-
-directory '/var/log/php-fpm' do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create
-end
-
-directory '/var/run/php-fpm' do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create
-end
-
-poise_service 'php-fpm' do
-  command '/usr/local/sbin/php-fpm --nodaemonize --fpm-config /etc/php-fpm.conf'
-  stop_signal 'WINCH'
-  reload_signal 'USR2'
-end
-
-service "php-fpm" do
-  supports :start => true, :stop => true, :restart => true, :reload => true
-  action [ :enable, :start ]
-end
-
-
-include_recipe 'php-fpm::configure'
+include_recipe 'php-fpm'
 
 web_server = node['owncloud']['web_server']
 
@@ -63,9 +36,9 @@ php_fpm_pool node['owncloud']['php-fpm']['pool'] do
   listen_mode '0660'
   if node['owncloud']['max_upload_size']
     php_options(
-      'php_admin_value[upload_max_filesize]' =>
-        node['owncloud']['max_upload_size'],
-      'php_admin_value[post_max_size]' => node['owncloud']['max_upload_size']
+        'php_admin_value[upload_max_filesize]' =>
+            node['owncloud']['max_upload_size'],
+        'php_admin_value[post_max_size]' => node['owncloud']['max_upload_size']
     )
   end
 end

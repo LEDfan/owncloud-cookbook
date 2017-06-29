@@ -73,50 +73,7 @@ end
 # Install PHP
 #==============================================================================
 
-# ownCloud requires PHP >= 5.4.0, so in older ubuntu versions we need to add an
-# extra repository in order to provide it
-#apt_repository 'ondrej-php5-oldstable' do
-#  uri 'http://ppa.launchpad.net/ondrej/php5-oldstable/ubuntu'
-#  distribution node['lsb']['codename'] if node['lsb'].is_a?(Hash)
-#  components %w(main)
-#  keyserver 'keyserver.ubuntu.com'
-#  key 'E5267A6C'
-#  deb_src true
-#  only_if do
-#    node['platform'] == 'ubuntu' &&
-#      Chef::VersionConstraint.new('<= 12.04').include?(node['platform_version'])
-#  end
-#end
-
-#
-# node.default['php']['curl']['package']   = ''
-# node.default['php']['apc']['package']    = ''
-# node.default['php']['apcu']['package']   = ''
-# node.default['php']['gd']['package']     = ''
-# node.default['php']['ldap']['package']   = ''
-# node.default['php']['pgsql']['package']  = ''
-# node.default['php']['sqlite']['package'] = ''
-# node.default['php']['version'] = '7.1.0'
-# node.default['php']['checksum'] = '9e84c5b13005c56374730edf534fe216f6a2e63792a9703d4b894e770bbccbae'
-
-# yum_repository 'mysql55' do
-# 	baseurl 'https://repo.mysql.com/yum/mysql-5.5-community/el/7/x86_64/'
-# 	description ''
-# 	enabled true
-# 	gpgcheck true
-#   repositoryid 'mysql55'
-# end
-# yum_repository 'mysql55-community' do
-#   mirrorlist 'https://repo.mysql.com/yum/mysql-5.5-community/el/$releasever/$basearch/'
-#   description ''
-#   enabled true
-#   gpgcheck true
-# end
-# include_recipe 'mysql55'
-
-# include_recipe 'php::source'
 # TODO only centos + centos 6
-
 include_recipe 'yum-epel'
 
 remote_file "#{Chef::Config[:file_cache_path]}/webtatic_repo_latest.rpm" do
@@ -155,7 +112,6 @@ directory '/var/lib/php/session' do
 end
 
 
-
 #==============================================================================
 # Set up database
 #==============================================================================
@@ -189,23 +145,6 @@ when 'mysql'
 
     dbinstance = node['owncloud']['mysql']['instance']
 
-    # working
-    # selinux_state "SELinux Enforcing" do
-    #   temporary true
-    #   action :disabled
-    # end
-    # include_recipe 'selinux::disabled' # TODO centos only
-
-    # selinux_state 'SELinux Permissive Temporary' do
-    #   temporary true
-    #   action :permissive
-    # end
-    #
-    # selinux_state 'SELinux Permissive Permanent after reboot' do
-    #   temporary false
-    #   action :permissive
-    # end
-    # end working
     include_recipe 'yum-mysql-community::mysql56' # TODO centos only, import that this 56
     mysql2_chef_gem dbinstance do
       action :install
@@ -311,9 +250,6 @@ when 'pgsql'
 else
   fail "Unsupported database type: #{node['owncloud']['config']['dbtype']}"
 end
-
-# node.default['yum']['epel-testing']['enabled'] = true
-# node.default['yum']['epel-testing']['managed'] = true
 
 
 #==============================================================================
