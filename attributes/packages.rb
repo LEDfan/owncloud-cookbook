@@ -21,25 +21,27 @@
 
 case node['platform_family']
 when 'debian'
+  # TODO check ubuntu
   default['owncloud']['packages']['core'] =
-    %w(php5-gd php5-intl php5-curl php5-json smbclient)
-  default['owncloud']['packages']['sqlite'] = %w(php5-sqlite)
-  default['owncloud']['packages']['mysql'] = %w(php5-mysql)
-  default['owncloud']['packages']['pgsql'] = %w(php5-pgsql)
+    %w(php7.0-gd php7.0-intl php7.0-curl php7.0-json smbclient)
+  default['owncloud']['packages']['sqlite'] = %w(php7.0-sqlite)
+  default['owncloud']['packages']['mysql'] = %w(php7.0-mysql)
+  default['owncloud']['packages']['pgsql'] = %w(php7.0-pgsql)
 when 'rhel'
-  if node['platform'] != 'amazon' && node['platform_version'].to_f < 6
-    default['owncloud']['packages']['core'] =
-      %w(php53-gd php53-mbstring php53-xml php53-intl samba-client)
-    default['owncloud']['packages']['sqlite'] = %w(php53-pdo)
-    default['owncloud']['packages']['mysql'] = %w(php53-mysql)
-    default['owncloud']['packages']['pgsql'] = %w(php53-pgsql)
-  else
-    default['owncloud']['packages']['core'] =
-      %w(php-gd php-mbstring php-xml php-intl samba-client)
-    default['owncloud']['packages']['sqlite'] = %w(php-pdo)
-    default['owncloud']['packages']['mysql'] = %w(php-mysql)
-    default['owncloud']['packages']['pgsql'] = %w(php-pgsql)
-  end
+  # if node['platform'] != 'amazon' && node['platform_version'].to_f < 6
+  #   default['owncloud']['packages']['core'] =
+  #     %w(php53-gd php53-mbstring php53-xml php53-intl samba-client)
+  #   default['owncloud']['packages']['sqlite'] = %w(php53-pdo)
+  #   default['owncloud']['packages']['mysql'] = %w(php53-mysql)
+  #   default['owncloud']['packages']['pgsql'] = %w(php53-pgsql)
+  # else
+  default['owncloud']['packages']['core'] =
+    %w(php71w-gd php71w-mbstring php71w-xml php71w-intl samba-client mod_php71w)
+  default['owncloud']['packages']['sqlite'] = %w(php71w-pdo)
+  default['owncloud']['packages']['mysql'] = %w(php71w-mysql)
+  default['owncloud']['packages']['pgsql'] = %w(php71w-pgsql)
+  default['php']['packages'] = ['php71w', 'php71w-devel', 'php71w-cli', 'php71w-pear']
+  # end
 when 'fedora'
   default['owncloud']['packages']['core'] =
     %w(php-gd php-mbstring php-xml php-intl samba-client)

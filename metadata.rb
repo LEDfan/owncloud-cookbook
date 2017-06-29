@@ -38,9 +38,9 @@ if respond_to?(:issues_url)
 end
 
 supports 'centos'
-supports 'debian'
+supports 'debian', '>= 9'
 supports 'scientific'
-supports 'ubuntu'
+supports 'ubuntu', '>= 16.04'
 
 depends 'apache2', '~> 3.0'
 depends 'apt', '~> 2.9'

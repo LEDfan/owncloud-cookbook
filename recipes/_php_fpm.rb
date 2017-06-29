@@ -24,13 +24,6 @@
 # Installs PHP-FPM
 #==============================================================================
 
-directory '/var/lib/php/session' do
-  owner 'apache'
-  group 'apache'
-  mode '0750'
-  action :create
-  recursive true
-end
 
 directory '/var/log/php-fpm' do
   owner 'root'
@@ -56,6 +49,7 @@ service "php-fpm" do
   supports :start => true, :stop => true, :restart => true, :reload => true
   action [ :enable, :start ]
 end
+
 
 include_recipe 'php-fpm::configure'
 

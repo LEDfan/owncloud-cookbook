@@ -88,16 +88,16 @@ end
 #  end
 #end
 
-
-node.default['php']['curl']['package']   = ''
-node.default['php']['apc']['package']    = ''
-node.default['php']['apcu']['package']   = ''
-node.default['php']['gd']['package']     = ''
-node.default['php']['ldap']['package']   = ''
-node.default['php']['pgsql']['package']  = ''
-node.default['php']['sqlite']['package'] = ''
-node.default['php']['version'] = '7.1.0'
-node.default['php']['checksum'] = '9e84c5b13005c56374730edf534fe216f6a2e63792a9703d4b894e770bbccbae'
+#
+# node.default['php']['curl']['package']   = ''
+# node.default['php']['apc']['package']    = ''
+# node.default['php']['apcu']['package']   = ''
+# node.default['php']['gd']['package']     = ''
+# node.default['php']['ldap']['package']   = ''
+# node.default['php']['pgsql']['package']  = ''
+# node.default['php']['sqlite']['package'] = ''
+# node.default['php']['version'] = '7.1.0'
+# node.default['php']['checksum'] = '9e84c5b13005c56374730edf534fe216f6a2e63792a9703d4b894e770bbccbae'
 
 # yum_repository 'mysql55' do
 # 	baseurl 'https://repo.mysql.com/yum/mysql-5.5-community/el/7/x86_64/'
@@ -114,20 +114,47 @@ node.default['php']['checksum'] = '9e84c5b13005c56374730edf534fe216f6a2e63792a97
 # end
 # include_recipe 'mysql55'
 
+# include_recipe 'php::source'
+# TODO only centos + centos 6
 
-#node['owncloud']['packages']['core'].each do |pkg|
-#  package pkg do
-#    action :install
-#  end
-#end
-#
-#if node['owncloud']['packages'].key?(dbtype)
-#  node['owncloud']['packages'][dbtype].each do |pkg|
-#    package pkg do
-#      action :install
-##    end
-#  end
-#end
+include_recipe 'yum-epel'
+
+remote_file "#{Chef::Config[:file_cache_path]}/webtatic_repo_latest.rpm" do
+  source "https://mirror.webtatic.com/yum/el7/webtatic-release.rpm"
+  action :create
+end
+
+rpm_package "webtatic" do
+  source "#{Chef::Config[:file_cache_path]}/webtatic_repo_latest.rpm"
+  action :install
+  options "--nodeps" # webtatic needs the epel yum packge to be installed, but we use the yum-epel cookbook
+end
+
+include_recipe 'php::default'
+
+node['owncloud']['packages']['core'].each do |pkg|
+ package pkg do
+   action :install
+ end
+end
+
+if node['owncloud']['packages'].key?(dbtype)
+ node['owncloud']['packages'][dbtype].each do |pkg|
+   package pkg do
+     action :install
+   end
+ end
+end
+
+directory '/var/lib/php/session' do
+  owner 'apache'
+  group 'apache'
+  mode '0750'
+  action :create
+  recursive true
+end
+
+
 
 #==============================================================================
 # Set up database
@@ -285,7 +312,9 @@ else
   fail "Unsupported database type: #{node['owncloud']['config']['dbtype']}"
 end
 
-include_recipe 'php::source'
+# node.default['yum']['epel-testing']['enabled'] = true
+# node.default['yum']['epel-testing']['managed'] = true
+
 
 #==============================================================================
 # Set up mail transfer agent
