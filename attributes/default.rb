@@ -88,7 +88,7 @@ default['owncloud']['cron']['weekday'] = '*'
 default['owncloud']['manage_database'] = nil
 
 default['owncloud']['mysql']['instance'] = 'default'
-default['owncloud']['mysql']['data_dir'] = nil
+default['owncloud']['mysql']['data_dir'] = '/var/lib/mysql'
 default['owncloud']['mysql']['run_group'] = nil
 default['owncloud']['mysql']['run_user'] = nil
 default['owncloud']['mysql']['version'] = nil

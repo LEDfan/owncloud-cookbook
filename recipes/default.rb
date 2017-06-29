@@ -162,7 +162,24 @@ when 'mysql'
 
     dbinstance = node['owncloud']['mysql']['instance']
 
-	include_recipe 'yum-mysql-community::mysql57'
+    # working
+    # selinux_state "SELinux Enforcing" do
+    #   temporary true
+    #   action :disabled
+    # end
+    # include_recipe 'selinux::disabled' # TODO centos only
+
+    # selinux_state 'SELinux Permissive Temporary' do
+    #   temporary true
+    #   action :permissive
+    # end
+    #
+    # selinux_state 'SELinux Permissive Permanent after reboot' do
+    #   temporary false
+    #   action :permissive
+    # end
+    # end working
+    include_recipe 'yum-mysql-community::mysql56' # TODO centos only, import that this 56
     mysql2_chef_gem dbinstance do
       action :install
     end
