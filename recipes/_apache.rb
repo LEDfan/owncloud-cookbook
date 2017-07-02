@@ -37,6 +37,14 @@ apache_site 'default' do
   enable false
 end
 
+directory '/var/lib/php/session' do
+  owner 'apache'
+  group 'apache'
+  mode '0750'
+  action :create
+  recursive true
+end
+
 # Create virtualhost for ownCloud
 web_app 'owncloud' do
   template 'apache_vhost.erb'

@@ -103,13 +103,6 @@ if node['owncloud']['packages'].key?(dbtype)
  end
 end
 
-directory '/var/lib/php/session' do
-  owner 'apache'
-  group 'apache'
-  mode '0750'
-  action :create
-  recursive true
-end
 
 
 #==============================================================================
